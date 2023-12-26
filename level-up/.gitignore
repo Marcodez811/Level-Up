@@ -16,6 +16,9 @@
 # production
 /build
 
+#pg
+/pg-data
+
 # misc
 .DS_Store
 *.pem
