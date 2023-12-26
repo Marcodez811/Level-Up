@@ -5,7 +5,6 @@ import { Tooltip, UnstyledButton, Stack, useMantineColorScheme, useComputedColor
 import {
   IconHome2,
   IconDeviceDesktopAnalytics,
-  IconSettings,
   IconLogout,
   IconMoonFilled,
   IconSunFilled,
@@ -16,6 +15,7 @@ import { User } from '@/lib/types/db';
 import { useRouter } from 'next/navigation'; 
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
+import cx from "clsx";
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;
@@ -37,7 +37,6 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 const data = [
   { icon: IconHome2, label: 'Home' },
   { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
-  { icon: IconSettings, label: 'Settings' },
 ];
 
 interface NavbarProps {
@@ -65,18 +64,29 @@ export function Navbar ({user}: NavbarProps) {
   return (
     <nav className={classes.navbar}>
       <div className={classes.navbarMain}>
-        <Stack justify="center" gap={0}>
+        <Stack justify="center" gap={5}>
           {links}
         </Stack>
       </div>
-      <Stack justify="center" gap={5} align='center'>
-        <NavbarLink 
+      <Stack justify="center" gap={10} align='center'>
+        <Tooltip label="Switch Mode" position="right" transitionProps={{ duration: 200 }}>
+          <ActionIcon
+            onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
+            variant="default"
+            size="xl"
+            aria-label="Toggle color scheme"
+          >
+              <IconSunFilled className={cx(classes.icon, classes.light)} stroke={1.5} />
+              <IconMoonFilled className={cx(classes.icon, classes.dark)} stroke={1.5} />
+          </ActionIcon>
+        </Tooltip>
+        {/* <NavbarLink 
           icon={computedColorScheme === 'light'? 
                                           IconMoonFilled:
                                           IconSunFilled} 
           label="Switch Theme" 
           onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
-        />
+        /> */}
         <Tooltip label={user.username} position="right" transitionProps={{ duration: 200 }}>
             <Avatar
                 alt="avatar"

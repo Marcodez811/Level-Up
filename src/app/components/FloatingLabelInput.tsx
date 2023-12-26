@@ -1,28 +1,45 @@
 "use client";
 
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import axios from 'axios';
 import { TextInput } from '@mantine/core';
 import classes from './FloatingLabelInput.module.css';
 import { useEventListener } from '@mantine/hooks';
-import { addTask } from '../actions/taskActions';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import { Task } from '@/lib/types/db';
 
-export function FloatingLabelInput() {
+export function FloatingLabelInput({setTasks}: {setTasks: Dispatch<SetStateAction<Task[]>>}) {
   const [focused, setFocused] = useState(false);
   const [value, setValue] = useState('');
   const floating = value.trim().length !== 0 || focused || undefined;
   const session = useSession();
   const ref = useEventListener('keydown', async (e) => {
       if (e.key === 'Enter') {
+        try {
           if (!session.data) return;
           if (!session.data.user) return;
           if (!value) return;
           const currentUser = session.data.user;
-          await axios.post("/api/tasks", {userId: currentUser.id, content: value})
-                    .then(() => setValue(""))
-                    .catch(() => toast.error("Something went wrong"));
+          // switched to using fetch because axios kept giving me weird errors :p
+          const response = await fetch("/api/tasks", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId: currentUser.id, content: value }),
+          });
+        
+          if (!response.ok) {
+            throw new Error("Something went wrong");
+          }
+          const data = await response.json();
+          const newTask = data.task;
+          setTasks(tasks => [newTask, ...tasks]);
+          setValue("");
+        } catch (error: any) {
+            toast.error(error.message);
+        }
       } 
   });
 

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db } from "@/db";
 import { tasksTable } from "@/db/schema";
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import { desc, eq } from "drizzle-orm";
 
 const postTaskSchema = z.object({
     userId: z.string(),
@@ -24,8 +25,8 @@ export async function POST(request: NextRequest) {
     const currentUser = await getCurrentUser();
     if (!currentUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 }); 
     const { userId, content } = data as PostTaskRequest;
-    await db.insert(tasksTable).values({ userId, content }).execute();
-    return new NextResponse(JSON.stringify("OK"), { status: 200 });
+    const [newTask] = await db.insert(tasksTable).values({ userId, content }).returning();
+    return NextResponse.json({task: newTask}, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error: "Something went wrong" },
@@ -35,4 +36,20 @@ export async function POST(request: NextRequest) {
 }
 
 // write get request here
-// write delete request here
+export async function GET(req: NextRequest) {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const tasks = await db.select()
+                          .from(tasksTable)
+                          .where(eq(tasksTable.userId, currentUser.id))
+                          .orderBy(desc(tasksTable.createdAt));
+    return NextResponse.json({ tasks }, { status: 200 })
+  } catch (error) {
+    console.error(error)
+    return NextResponse.json(
+      { error: "Something wrong" },
+      { status: 500 },
+    );
+  }
+}

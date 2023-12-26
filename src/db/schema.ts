@@ -1,7 +1,9 @@
+import { sql } from "drizzle-orm";
 import {
   boolean,
   index,
   integer,
+  interval,
   pgTable,
   serial,
   text,
@@ -39,15 +41,13 @@ export const tasksTable = pgTable(
   {
     id: serial("id").primaryKey(),
     content: text("content").notNull(),
-    createdAt: timestamp("time", {
-      mode: "string",
-      withTimezone: true,
-    }),
+    createdAt: timestamp("created_at").default(sql`now()`).notNull(),
     userId: uuid("user_id").defaultRandom().notNull().references(() => usersTable.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
-    completed: boolean("completed").default(false),
+    completed: boolean("completed").default(false).notNull(),
+    elapsedTime: interval("elapsed_time").notNull().default(sql`'0 seconds'::interval`),
   },
   (table) => ({
     idIndex: index("task_id_index").on(table.id),
