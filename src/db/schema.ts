@@ -26,6 +26,10 @@ export const usersTable = pgTable(
     level: integer('level').default(1).notNull(),
     experience: integer('experience').default(0).notNull(),
     hashedPassword: varchar("hashed_password", { length: 100 }),
+    lastUpdate: timestamp("last-update", {
+      mode: "string",
+      withTimezone: true
+    }).defaultNow().notNull(),
   },
   (table) => ({
     emailIndex: index("email_index").on(table.email),
@@ -42,12 +46,14 @@ export const tasksTable = pgTable(
     createdAt: timestamp("time", {
       mode: "string",
       withTimezone: true,
-    }),
+    }).defaultNow(),
     userId: uuid("user_id").defaultRandom().notNull().references(() => usersTable.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
     completed: boolean("completed").default(false),
+    pause: boolean("pause").default(false),
+    duration: integer("duration").default(0),
   },
   (table) => ({
     idIndex: index("task_id_index").on(table.id),

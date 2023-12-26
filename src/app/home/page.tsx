@@ -9,6 +9,22 @@ const Home = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
 
     useEffect(() => {
+      const getTasks = async () => {
+        const res = await fetch(`/api/tasks/`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!res.ok) return;
+        
+        const data = await res.json();
+        
+        const tasks = Object.values(data.tasks) as Task[];
+        setTasks(tasks);
+      };
+      getTasks();
+      
     }, []);
 
     return (
