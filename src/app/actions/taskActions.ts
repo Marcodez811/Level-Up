@@ -13,6 +13,7 @@ export const addTask = async (taskInfo : string) => {
         const createdTask = await db.insert(tasksTable).values({userId: currentUser.id, content: taskInfo}).returning();
         return createdTask;
     } catch (e) {
+        console.error(e);
         throw new Error("Some other error!");  
     }
 }

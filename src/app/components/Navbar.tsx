@@ -13,8 +13,9 @@ import {
 import { Avatar } from '@mantine/core';
 import classes from './NavbarMinimal.module.css';
 import { User } from '@/lib/types/db';
+import { useRouter } from 'next/navigation'; 
+import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
-import cx from "clsx";
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;
@@ -44,15 +45,20 @@ interface NavbarProps {
 }
 
 export function Navbar ({user}: NavbarProps) {
-  const [active, setActive] = useState(0);
+  const pathname = usePathname();
+  const [active, setActive] = useState(data.findIndex(element => element.label.toLowerCase() === pathname.slice(1)));
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
+  const router = useRouter();
   const links = data.map((link, index) => (
     <NavbarLink
       {...link}
       key={link.label}
       active={index === active}
-      onClick={() => setActive(index)}
+      onClick={() => {
+        setActive(index)
+        router.push(`/${link.label.toLowerCase()}`);
+      }}
     />
   ));
 
@@ -75,9 +81,9 @@ export function Navbar ({user}: NavbarProps) {
             <Avatar
                 alt="avatar"
                 radius="xl"
-                h={35}
-                w={35}
-                src={user.image? user.image: "/images/user_placeholder.jpg"}
+                size="md"
+                src={user.image}
+                color="indigo"
             />
         </Tooltip>
         <NavbarLink 

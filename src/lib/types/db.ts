@@ -1,11 +1,10 @@
 export type User = {
+    id: string;
     email: string;
     username: string;
     experience: number;
     level: number;
     image: string | null;
-    title: string | null;
-    id: string;   
     provider: "github" | "google" | "credentials";
 };
 

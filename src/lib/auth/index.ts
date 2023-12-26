@@ -18,12 +18,11 @@ export const {
       const [user] = await db
         .select({
           id: usersTable.id,
-          name: usersTable.name,
+          username: usersTable.username,
           provider: usersTable.provider,
           email: usersTable.email,
           image: usersTable.image,
           level: usersTable.level,
-          title: usersTable.title,
           experience: usersTable.experience
         })
         .from(usersTable)
@@ -34,12 +33,11 @@ export const {
         ...session,
         user: {
           id: user.id,
-          username: user.name,
+          username: user.username,
           email: user.email,
           provider: user.provider,
           image: user.image,
           level: user.level,
-          title: user.title,
           experience: user.experience,
         },
       };
@@ -61,7 +59,7 @@ export const {
       // Sign up
       if (provider === "github" || provider === "google") {
           await db.insert(usersTable).values({
-            name,
+            username: name,
             email: email.toLowerCase(),
             provider,
             image: picture

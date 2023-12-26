@@ -20,18 +20,18 @@ export function RankTable({users} : RankTableProps) {
     const neg = 100 - pos;
 
     return (
-      <Table.Tr key={user.email}>
+      <Table.Tr key={user.id}>
         <Table.Td><Text size="sm" fw={700}>{idx + 1}</Text></Table.Td>
         <Table.Td>
           <Group gap="xs">
             <Avatar
               alt="avatar"
-              h={35}
-              w={35}
-              src={user.image? user.image: "/images/user_placeholder.jpg"}
+              size="md"
+              src={user.image}
+              color="indigo"
             />
             {/* todo: wrap this in a Link Component and push the route to user/[userid] */}
-            <Anchor component="button" fz="sm" c="violet" fw={700}>
+            <Anchor component="button" fz="sm" c="indigo" fw={700}>
               {user.username}
             </Anchor>
           </Group>

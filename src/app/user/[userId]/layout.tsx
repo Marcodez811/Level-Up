@@ -1,6 +1,6 @@
 import SideBar from "@/app/components/SideBar";
 import { redirect } from 'next/navigation';
-import getCurrentUser from "../actions/getCurrentUser";
+import getCurrentUser from "../../actions/getCurrentUser";
 import { Flex, Title, Center, Space } from "@mantine/core";
 import motivationalQuotes from "@/lib/utils/motivationQuotes";
 

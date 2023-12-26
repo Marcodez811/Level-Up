@@ -7,7 +7,11 @@ import { Task } from "@/lib/types/db";
 
 const TaskSection = ({tasks}: {tasks: Task[]}) => {
   return (
-    <Stack h={700} className={classes.sectionBorder}>
+    <Stack 
+      w={700} 
+      h={700} 
+      className={classes.sectionBorder}
+      >
         <Title order={4}>{"Mission Panel"}</Title>
         <FloatingLabelInput />
         {tasks.map(task => task.content)}

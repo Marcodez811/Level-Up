@@ -21,7 +21,7 @@ export default CredentialsProvider({
     try {
       validatedCredentials = authSchema.parse(credentials);
     } catch (error) {
-      console.log("Wrong credentials. Try again.");
+      console.error("Wrong credentials. Try again.");
       return null;
     }
     const { email, username, password } = validatedCredentials;
@@ -29,7 +29,7 @@ export default CredentialsProvider({
     const [existedUser] = await db
       .select({
         id: usersTable.id,
-        name: usersTable.name,
+        username: usersTable.username,
         email: usersTable.email,
         provider: usersTable.provider,
         hashedPassword: usersTable.hashedPassword,
@@ -44,7 +44,7 @@ export default CredentialsProvider({
       const [createdUser] = await db
         .insert(usersTable)
         .values({
-          name: username,
+          username,
           email: email.toLowerCase(),
           hashedPassword,
           provider: "credentials",
@@ -52,29 +52,29 @@ export default CredentialsProvider({
         .returning();
       return {
         email: createdUser.email,
-        name: createdUser.name,
+        username: createdUser.username,
         id: createdUser.id
       };
     }
 
     // Sign in
     if (existedUser.provider !== "credentials") {
-      console.log(`The email has registered with ${existedUser.provider}.`);
+      console.error(`The email has registered with ${existedUser.provider}.`);
       return null;
     }
     if (!existedUser.hashedPassword) {
-      console.log("The email has registered with social account.");
+      console.error("The email has registered with social account.");
       return null;
     }
 
     const isValid = await bcrypt.compare(password, existedUser.hashedPassword);
     if (!isValid) {
-      console.log("Wrong password. Try again.");
+      console.error("Wrong password. Try again.");
       return null;
     }
     return {
       email: existedUser.email,
-      name: existedUser.name,
+      username: existedUser.username,
       id: existedUser.id,
     };
   },

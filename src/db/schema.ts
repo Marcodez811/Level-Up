@@ -14,7 +14,7 @@ export const usersTable = pgTable(
   "users",
   {
     id: uuid("user_id").defaultRandom().notNull().primaryKey(),
-    name: varchar("name", { length: 100 }).notNull(),
+    username: varchar("username", { length: 100 }).notNull(),
     email: varchar("email", { length: 100 }).notNull().unique(),
     provider: varchar("provider", {
       length: 100,
@@ -23,14 +23,13 @@ export const usersTable = pgTable(
       .notNull()
       .default("credentials"),
     image: varchar("image", { length: 100 }),
-    title: varchar("title", { length: 100 }),
-    level: integer('level').default(1),
-    experience: integer('experience').default(0),
+    level: integer('level').default(1).notNull(),
+    experience: integer('experience').default(0).notNull(),
     hashedPassword: varchar("hashed_password", { length: 100 }),
   },
   (table) => ({
     emailIndex: index("email_index").on(table.email),
-    nameIndex: index("name_index").on(table.name),
+    nameIndex: index("name_index").on(table.username),
     idIndex: index("id").on(table.id),
   }),
 );

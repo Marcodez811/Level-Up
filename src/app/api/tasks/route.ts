@@ -35,3 +35,4 @@ export async function POST(request: NextRequest) {
 }
 
 // write get request here
+// write delete request here
