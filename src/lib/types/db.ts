@@ -14,4 +14,5 @@ export type Task = {
     id: number;
     createdAt: string | null;
     completed: boolean | null;
+    pause: boolean;
 }

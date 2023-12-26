@@ -1,6 +1,10 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useCallback, forwardRef } from 'react';
+import { useRouter } from 'next/navigation'; 
+import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
+
 import { Tooltip, UnstyledButton, Stack, useMantineColorScheme, useComputedColorScheme, ActionIcon } from '@mantine/core';
 import {
   IconHome2,
@@ -12,10 +16,9 @@ import {
 } from '@tabler/icons-react';
 import { Avatar } from '@mantine/core';
 import classes from './NavbarMinimal.module.css';
+import { CldUploadButton, CldUploadWidget, CldImage } from 'next-cloudinary';
+
 import { User } from '@/lib/types/db';
-import { useRouter } from 'next/navigation'; 
-import { usePathname } from 'next/navigation';
-import { signOut } from 'next-auth/react';
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;
@@ -47,6 +50,7 @@ interface NavbarProps {
 export function Navbar ({user}: NavbarProps) {
   const pathname = usePathname();
   const [active, setActive] = useState(data.findIndex(element => element.label.toLowerCase() === pathname.slice(1)));
+  const [imgPublicId, setImgPublicId] = useState('/');
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
   const router = useRouter();
@@ -61,6 +65,37 @@ export function Navbar ({user}: NavbarProps) {
       }}
     />
   ));
+
+  // handle user image upload
+  const handleUpload = useCallback(
+    (result:any) => {
+        console.log("========");
+        console.log(result.info);
+        console.log(result.info.public_id)
+        setImgPublicId(result.info.public_id);
+    },
+    []
+  )
+  type propType = {
+    uploadPreset:string, 
+    onUpload:(result: any) => void, 
+    user: User
+  }
+  const UploadButtonWithRef = forwardRef((props:propType) => {
+    const {uploadPreset, onUpload, user} = props;
+    return(
+    <CldUploadButton uploadPreset={uploadPreset} onUpload={onUpload}>
+      <Avatar
+        alt="avatar"
+        radius="xl"
+        size="md"
+        src={user.image}
+        color="indigo"
+      />
+    </CldUploadButton>
+  )});
+  
+  
 
   return (
     <nav className={classes.navbar}>
@@ -77,6 +112,19 @@ export function Navbar ({user}: NavbarProps) {
           label="Switch Theme" 
           onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
         />
+        {/* Warning: forwardRef render functions accept exactly two parameters: props and ref. Did you forget to use the ref parameter?  */}
+        {/* <Tooltip label={user.username} position="right" transitionProps={{ duration: 200 }}>
+            {user.image===null?(
+              <CldUploadButton uploadPreset="s5aw9acw" onUpload={handleUpload} >
+                <Avatar
+                alt="avatar"
+                radius="xl"
+                size="md"
+                src={user.image}
+                color="indigo"
+              />
+              </CldUploadButton>):<div></div>}
+        </Tooltip> */}
         <Tooltip label={user.username} position="right" transitionProps={{ duration: 200 }}>
             <Avatar
                 alt="avatar"
@@ -84,8 +132,10 @@ export function Navbar ({user}: NavbarProps) {
                 size="md"
                 src={user.image}
                 color="indigo"
-            />
+              />
         </Tooltip>
+
+        
         <NavbarLink 
           icon={IconLogout} 
           label="Logout" 

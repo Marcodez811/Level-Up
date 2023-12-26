@@ -11,6 +11,7 @@ const TaskSection = ({tasks}: {tasks: Task[]}) => {
   const router = useRouter();
   const [showedTasks, setShowedTasks] = useState<Task[]>([]);
   const [completedTasks, setCompletedTasks] = useState<number[]>([]);
+  const [pausedTasks, setPausedTasks] = useState<number[]>([]);
   useEffect(() => {
     setShowedTasks(tasks);
   }, [tasks]);
@@ -23,12 +24,39 @@ const TaskSection = ({tasks}: {tasks: Task[]}) => {
       },
       body: JSON.stringify({
         taskId: taskId,
+        action: "complete"
       }),
     });
     if (!res.ok) {
       return;
     }
     const updateTasks = () => setCompletedTasks(prevState => [...prevState, taskId]);
+    updateTasks();
+    router.refresh();
+  };
+  const pauseTask = async (taskId: number) => {
+    const res = await fetch(`/api/tasks/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        taskId: taskId,
+        action: "pause",
+      }),
+    });
+    if (!res.ok) {
+      return;
+    }
+    const updateTasks = () => {
+      setPausedTasks(task => {
+        if (task.includes(taskId)) {
+          return task.filter(id => id !== taskId);
+        } else {
+          return [...task, taskId];
+        }
+      });
+    };
     updateTasks();
     router.refresh();
   };
@@ -63,6 +91,7 @@ const TaskSection = ({tasks}: {tasks: Task[]}) => {
             <span>ID: {task.id} {"     "} Content: {task.content}</span>
             <button onClick={() => {completeTask(task.id)} } disabled={completedTasks.includes(task.id) || task.completed!}>Complete</button>
             <button onClick={() => {deleteTask(task.id)}}>Delete</button>
+            <button onClick={() => {pauseTask(task.id)}}> {pausedTasks.includes(task.id) || task.pause!?"Continue":"Pause"} </button>
           </div>
         ))}
     </Stack>

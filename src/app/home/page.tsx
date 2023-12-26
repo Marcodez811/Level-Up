@@ -24,8 +24,7 @@ const Home = () => {
         setTasks(tasks);
       };
       getTasks();
-      
-    }, []);
+    }, [tasks]);
 
     return (
       <>

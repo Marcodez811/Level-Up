@@ -7,7 +7,7 @@ import { desc } from 'drizzle-orm';
 export const getAllUsers = async () => {
     // todo: make this function return all the users sorted from highest level to the lowest
     try {
-        const result = await db.select().from(usersTable).limit(50).orderBy(desc(usersTable.level));
+        const result = await db.select().from(usersTable).limit(50).orderBy(desc(usersTable.level), desc(usersTable.experience));
         return result;
     } catch (e) {
         console.error(e);
