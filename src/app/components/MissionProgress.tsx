@@ -1,15 +1,18 @@
-import { Text, Card, RingProgress, Group, useMantineTheme } from '@mantine/core';
+import { Text, Card, RingProgress, Group } from '@mantine/core';
 import classes from './MissionProgress.module.css';
+import { UserInfo } from '@/lib/types/db';
+import levelExperience from '@/lib/utils/levelExperience';
 
-const stats = [
-  { value: 447, label: 'Remaining' },
-  { value: 76, label: 'In progress' },
-];
 
-export function MissionProgress() {
-  const theme = useMantineTheme();
-  const completed = 1887;
-  const total = 2334;
+export function MissionProgress({user}: {user: UserInfo}) {
+
+  const stats = [
+    { value: levelExperience[user.level + 1] - user.experience, label: 'Remaining' },
+    { value: user.experience, label: 'In progress' },
+  ];  
+
+  const completed = user.experience;
+  const total = levelExperience[user.level + 1];
   const items = stats.map((stat) => (
     <div key={stat.label}>
       <Text className={classes.label}>{stat.value}</Text>
@@ -24,14 +27,14 @@ export function MissionProgress() {
       <div className={classes.inner}>
         <div>
           <Text fz="xl" className={classes.label}>
-            Missions
+            Focused Time
           </Text>
           <div>
             <Text className={classes.lead} mt={30}>
-              1887
+              {user.totalElapsedTime}
             </Text>
             <Text fz="xs" c="dimmed">
-              Completed
+              total seconds
             </Text>
           </div>
           <Group mt="lg">{items}</Group>
@@ -49,7 +52,7 @@ export function MissionProgress() {
                   {((completed / total) * 100).toFixed(0)}%
                 </Text>
                 <Text ta="center" fz="xs" c="dimmed">
-                  Completed
+                  To next level
                 </Text>
               </div>
             }

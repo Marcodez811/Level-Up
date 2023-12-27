@@ -14,7 +14,7 @@ export default async function PageLayout({
     if (!currentUser) redirect("/");
     const getRandomQuote = (): string => {
         const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
-        return motivationalQuotes[randomIndex];
+        return `"${motivationalQuotes[randomIndex]}"`;
     };
     const quote = getRandomQuote();
     return (

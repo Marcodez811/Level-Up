@@ -68,7 +68,7 @@ export function Navbar ({user}: NavbarProps) {
           {links}
         </Stack>
       </div>
-      <Stack justify="center" gap={10} align='center'>
+      <Stack justify="center" gap={15} align='center'>
         <Tooltip label="Switch Mode" position="right" transitionProps={{ duration: 200 }}>
           <ActionIcon
             onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
@@ -80,13 +80,15 @@ export function Navbar ({user}: NavbarProps) {
               <IconMoonFilled className={cx(classes.icon, classes.dark)} stroke={1.5} />
           </ActionIcon>
         </Tooltip>
-        <Tooltip label={user.username} position="right" transitionProps={{ duration: 200 }}>
+        <Tooltip label="View Data" position="right" transitionProps={{ duration: 200 }}>
             <Avatar
                 alt="avatar"
                 radius="xl"
                 size="md"
+                style={{cursor: 'pointer'}}
                 src={user.image}
                 color="indigo"
+                onClick={() => router.push(`/user/${user.id}`)}
             />
         </Tooltip>
         <NavbarLink 

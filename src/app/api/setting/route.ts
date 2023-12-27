@@ -1,16 +1,9 @@
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
+import bcrypt from "bcryptjs";
 import { usersTable } from "@/db/schema";
 import getCurrentUser from "@/app/actions/getCurrentUser";
-
-interface UpdateObject {
-  image?: string;
-  username?: string;
-  password?: string;
-  newPassword?: string;
-  confirmPassword?: string;
-}
 
 export async function POST(
   request: Request,
@@ -26,15 +19,15 @@ export async function POST(
       image,
     } = body;
 
-    const updateObject: UpdateObject = {};
+    const updateObject = {};
     if (image) {
-      updateObject["image"] = image;
+        Object.assign(updateObject, { image });
     }
     if (username) {
-      updateObject["username"] = username;
+        Object.assign(updateObject, { username });
     }
     if (password) {
-      updateObject["password"] = newPassword;
+        Object.assign(updateObject, { hashedPassword: await bcrypt.hash(newPassword, 12) });
     }
     const [updatedUser] = await db.update(usersTable)
                                   .set(updateObject)

@@ -1,21 +1,45 @@
 "use client";
-import motivationalQuotes from "@/lib/utils/motivationQuotes";
-import { Container,  Space } from "@mantine/core";
+import { UserInfo } from "@/app/components/UserInfo";
+import { Container,  Skeleton,  Space, Stack } from "@mantine/core";
+import axios from "axios";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import TaskSection from "../../components/TaskSection";
-import { Task } from "@/lib/types/db";
 
 const Home = () => {
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const pathname = usePathname();
+    const userId = pathname.split("/").pop();
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
-    }, []);
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get(`/api/user/${userId}`);
+          setUser(response.data.user);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+      fetchUserData();
+    }, [userId]);
+
+    if (!user) {
+      return (
+        <Stack 
+          w={800} 
+          h={700}>
+          <Skeleton height={50} circle mb="xl" />
+          <Skeleton height={8} radius="xl" />
+          <Skeleton height={8} mt={6} radius="xl" />
+          <Skeleton height={8} mt={6} width="70%" radius="xl" />
+        </Stack>
+      );
+    }
 
     return (
       <>
         <Container fluid>
           <Space h="md"/>
-          <div style={{borderBottom: "rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))"}}/>
+          <UserInfo user={user}/> 
         </Container>
       </>
     )

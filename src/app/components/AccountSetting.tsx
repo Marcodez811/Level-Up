@@ -37,13 +37,22 @@ const AccountSetting = ({user} : {user: User}) => {
     }
     const handleSubmit = (values: any) => {
         setIsLoading(true);
+        if (Object.keys(values).every(key => values[key] === '')) {
+            notifications.show({
+                title: "Error",
+                message: "You need to update fields before you upload!",
+                color: "red",
+            });
+            setIsLoading(false);
+            return;
+        }
         if (values.password) {
             if (!values.newPassword || !values.confirmPassword) {
                 notifications.show({
                     title: "Error",
                     message: "You need to fill the passwords!",
                     color: "red",
-                })
+                });
                 setIsLoading(false);
                 return;
             }
@@ -76,6 +85,7 @@ const AccountSetting = ({user} : {user: User}) => {
         .finally(() => {
             setIsLoading(false);
             setDisabled(false);
+            form.reset();
         });
     }
 

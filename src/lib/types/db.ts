@@ -10,6 +10,16 @@ export type User = {
     hashedPassword: string | null;
 };
 
+export type UserInfo = {
+    username: string;
+    email: string;
+    experience: number;
+    level: number;
+    image: string | null;
+    title: string;
+    totalElapsedTime: string;
+};
+
 export type Task = {
     id: number;
     content: string;

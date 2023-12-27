@@ -30,13 +30,13 @@ export function RankTable({users} : RankTableProps) {
               src={user.image}
               color="violet"
             />
-            {/* todo: push the route to user/[userid] */}
             {/* todo: check if there's a way to change the theme so that anchor can display different color in different themes */}
             <Anchor 
-              component="button" 
+              // component="button" 
               fz="sm" 
               c="gray"
               fw={700}
+              href={`/user/${user.id}`}
             >
               {user.username}
             </Anchor>
