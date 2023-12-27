@@ -47,33 +47,55 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
       return formattedTimer;
     });
   };
-
-  useEffect(() => {
-    const updateTimerValue = async () => {
-      try {
-        const response = await fetch(`/api/tasks/${task.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            elapsedTime: timer,
-            action: "elapsedTime"
-          }),
-        });
-      
-        if (!response.ok) {
-          throw new Error(`Error updating timer value: ${response.status} ${response.statusText}`);
-        }
-      
-        const responseData = await response.json();
-        console.log("Timer value updated successfully:", responseData);
-      } catch (error) {
-        console.error("Error updating timer value:", error);
+  const updateTimerValue = async () => {
+    try {
+      const response = await fetch(`/api/tasks/${task.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          elapsedTime: timer,
+          action: "elapsedTime"
+        }),
+      });
+    
+      if (!response.ok) {
+        throw new Error(`Error updating timer value: ${response.status} ${response.statusText}`);
       }
+    
+      const responseData = await response.json();
+      console.log("Timer value updated successfully:", responseData);
+    } catch (error) {
+      console.error("Error updating timer value:", error);
+    }
+    
+  };
+  useEffect(() => {
+    // const updateTimerValue = async () => {
+    //   try {
+    //     const response = await fetch(`/api/tasks/${task.id}`, {
+    //       method: 'PUT',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       body: JSON.stringify({ 
+    //         elapsedTime: timer,
+    //         action: "elapsedTime"
+    //       }),
+    //     });
       
-    };
-    // setCompletedTasks(completedTasks);
+    //     if (!response.ok) {
+    //       throw new Error(`Error updating timer value: ${response.status} ${response.statusText}`);
+    //     }
+      
+    //     const responseData = await response.json();
+    //     console.log("Timer value updated successfully:", responseData);
+    //   } catch (error) {
+    //     console.error("Error updating timer value:", error);
+    //   }
+      
+    // };
     if (ticking) {
       // Update the timer every 1000 ms
       const newIntervalId = setInterval(updateTimer, 1000);
@@ -85,6 +107,18 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
       updateTimerValue();
     }
   }, [ticking, task.id, timer]);
+
+
+  useEffect(() => {
+    console.log("[[reload]]")
+    const handleBeforeUnload = async () => {
+      updateTimerValue()
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [timer]);
 
   const onComplete = async (taskId:number) => {
     // Your logic for completing the task
