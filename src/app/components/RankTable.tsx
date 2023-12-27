@@ -53,6 +53,7 @@ export function RankTable({users} : RankTableProps) {
             >
               {user.username}
             </Anchor>
+            {user.title}
           </Group>
         </Table.Td>
         <Table.Td>

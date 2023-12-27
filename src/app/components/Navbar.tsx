@@ -106,7 +106,7 @@ export function Navbar ({user}: NavbarProps) {
     user: User
   }
   const uploadProps = {
-    uploadPreset: "uploadPreset", // ? should it be a env variable?
+    uploadPreset: "uploadPreset", // ? should it be an env variable?
     onUpload: handleUpload, 
     user: user
   }

@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Checkbox, Text, Paper, Flex, Group, ActionIcon } from '@mantine/core';
 import { IconPlayerPlayFilled, IconPlayerPauseFilled, IconTrash } from '@tabler/icons-react';
 import axios from 'axios';
@@ -10,6 +11,9 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
   const [timer, setTimer] = useState(task.elapsedTime);
   const [ticking, setTicking] = useState(false);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | undefined>(undefined);
+
+  const [completedTasks, setCompletedTasks] = useState<number[]>([]);
+  const router = useRouter();
 
   const onDelete = async () => {
     setTicking(false);
@@ -52,7 +56,10 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ elapsedTime: timer }),
+          body: JSON.stringify({ 
+            elapsedTime: timer,
+            action: "elapsedTime"
+          }),
         });
       
         if (!response.ok) {
@@ -66,7 +73,7 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
       }
       
     };
-  
+    // setCompletedTasks(completedTasks);
     if (ticking) {
       // Update the timer every 1000 ms
       const newIntervalId = setInterval(updateTimer, 1000);
@@ -79,8 +86,29 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
     }
   }, [ticking, task.id, timer]);
 
-  const onComplete = async () => {
+  const onComplete = async (taskId:number) => {
     // Your logic for completing the task
+    // When completing the task, stop timer and send a PUT request to task/[taskId].
+    setTicking(false);
+    
+    console.log("Sending request...")
+    const res = await fetch(`/api/tasks/${taskId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        elapsedTime: timer,
+        action: "complete",
+      }),
+    });
+    if (!res.ok) {
+      return;
+    }
+    const updateTasks = () => setCompletedTasks(prevState => [...prevState, taskId]); 
+    updateTasks();
+   
+    router.refresh();
   };
 
   return (
@@ -88,9 +116,10 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
       <Flex justify="space-between" w="100%">
         <Group gap={0}>
           <Checkbox
-            disabled={task.completed}
+            disabled={task.completed || completedTasks.includes(task.id) }
             checked={value}
             onChange={() => onChange(!value)}
+            onClick={() => onComplete(task.id)}
             tabIndex={-1}
             size="md"
             mr="xl"
@@ -108,7 +137,7 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
           <Text>{timer}</Text>
           <ActionIcon
             variant="transparent"
-            disabled={task.completed}
+            disabled={task.completed || completedTasks.includes(task.id)}
             color="violet"
             size="sm"
             onClick={() => {

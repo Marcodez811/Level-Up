@@ -1,6 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
 
 import { ScrollArea, Stack, Title } from "@mantine/core";
 import classes from "./TaskSection.module.css";
