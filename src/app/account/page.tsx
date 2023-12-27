@@ -1,21 +1,19 @@
 "use client";
-import motivationalQuotes from "@/lib/utils/motivationQuotes";
 import { Container,  Space } from "@mantine/core";
-import { useEffect, useState } from "react";
-import TaskSection from "../components/TaskSection";
-import { Task } from "@/lib/types/db";
+import { useSession } from "next-auth/react";
+import { User } from "@/lib/types/db";
+import AccountSetting from "../components/AccountSetting";
 
 const Home = () => {
-    const [tasks, setTasks] = useState<Task[]>([]);
-
-    useEffect(() => {
-    }, []);
-
+    const session = useSession();
+    if (!session.data) return;
+    if (!session.data.user) return;
     return (
       <>
         <Container fluid>
           <Space h="md"/>
           <div style={{borderBottom: "rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))"}}/>
+          <AccountSetting user={session.data.user as User}/>
         </Container>
       </>
     )

@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Tooltip, UnstyledButton, Stack, useMantineColorScheme, useComputedColorScheme, ActionIcon } from '@mantine/core';
 import {
   IconHome2,
-  IconDeviceDesktopAnalytics,
   IconLogout,
   IconMoonFilled,
   IconSunFilled,
