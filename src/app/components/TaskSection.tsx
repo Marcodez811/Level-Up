@@ -2,100 +2,69 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
-import { Stack, Title } from "@mantine/core";
-import classes from "./TaskSection.module.css"
+import { ScrollArea, Stack, Title } from "@mantine/core";
+import classes from "./TaskSection.module.css";
+import cx from 'clsx';
 import { FloatingLabelInput } from "./FloatingLabelInput";
 import { Task } from "@/lib/types/db";
+import { Mission } from "./Mission";
+import { Dispatch, SetStateAction } from "react";
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
-const TaskSection = ({tasks}: {tasks: Task[]}) => {
-  const router = useRouter();
-  const [showedTasks, setShowedTasks] = useState<Task[]>([]);
-  const [completedTasks, setCompletedTasks] = useState<number[]>([]);
-  const [pausedTasks, setPausedTasks] = useState<number[]>([]);
-  useEffect(() => {
-    setShowedTasks(tasks);
-  }, [tasks]);
-  const completeTask = async (taskId: number) => {
-    window.location.reload();
-    const res = await fetch(`/api/tasks/`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        taskId: taskId,
-        action: "complete"
-      }),
-    });
-    if (!res.ok) {
-      return;
-    }
-    const updateTasks = () => setCompletedTasks(prevState => [...prevState, taskId]);
-    updateTasks();
-    router.refresh();
-  };
-  const pauseTask = async (taskId: number) => {
-    const res = await fetch(`/api/tasks/`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        taskId: taskId,
-        action: "pause",
-      }),
-    });
-    if (!res.ok) {
-      return;
-    }
-    const updateTasks = () => {
-      setPausedTasks(task => {
-        if (task.includes(taskId)) {
-          return task.filter(id => id !== taskId);
-        } else {
-          return [...task, taskId];
-        }
-      });
-    };
-    updateTasks();
-    router.refresh();
-  };
-  const deleteTask =async (taskId:number) => {
-    const res = await fetch(`/api/tasks/`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        taskId: taskId,
-      }),
-    });
-    if (!res.ok) {
-      return;
-    }
-    const updateTasks = () => setShowedTasks(showedTasks.filter((task) => task.id!==taskId));
-    updateTasks();
-    router.refresh();
-  }
+const TaskSection = ({tasks, setTasks}: {tasks: Task[], setTasks: Dispatch<SetStateAction<Task[]>>}) => {
+  const items = tasks.map((t, idx) => (
+    <Draggable key={t.id} index={idx} draggableId={t.id.toString()}>
+      {(provided, snapshot) => (
+        <div
+          className={cx(classes.item, { [classes.itemDragging]: snapshot.isDragging })}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          ref={provided.innerRef}
+        >
+          <Mission 
+            key={t.id}
+            task={t}
+            setTasks={setTasks}/>
+        </div>
+      )}
+    </Draggable>
+  ));
+
   return (
     <Stack 
-      w={700} 
-      h={700} 
+      w={800} 
+      h={700}
       className={classes.sectionBorder}
       >
         <Title order={4}>{"Mission Panel"}</Title>
-        <FloatingLabelInput />
-        {/* {tasks.map(task => task.content)} */}
-        {showedTasks.map(task => (
-          <div key={task.id}>
-            <span>ID: {task.id} {"     "} Content: {task.content}</span>
-            <button onClick={() => {completeTask(task.id)} } disabled={completedTasks.includes(task.id) || task.completed!}>Complete</button>
-            <button onClick={() => {deleteTask(task.id)}}>Delete</button>
-            <button onClick={() => {pauseTask(task.id)}}> {pausedTasks.includes(task.id) || task.pause!?"Continue":"Pause"} </button>
-          </div>
-        ))}
+        <FloatingLabelInput setTasks={setTasks}/>
+        <ScrollArea h={500}>
+            <Stack p={15} align="center" justify="center" w="100%">
+              <DragDropContext
+                onDragEnd={({ destination, source }) => {
+                  if (!destination) return;
+                  const updatedTasks = Array.from(tasks);
+                  const [movedTask] = updatedTasks.splice(source.index, 1);
+                  updatedTasks.splice(destination.index, 0, movedTask);
+                  setTasks(updatedTasks);
+                }}
+              >
+                <Droppable droppableId="dnd-list" direction="vertical">
+                  {(provided) => (
+                    <div 
+                      {...provided.droppableProps} 
+                      ref={provided.innerRef}
+                      style={{width: "100%"}}>
+                      {items}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            </Stack>
+        </ScrollArea>
     </Stack>
   )
 }
 
-export default TaskSection
+export default TaskSection;

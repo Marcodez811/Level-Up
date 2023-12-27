@@ -9,10 +9,10 @@ export type User = {
 };
 
 export type Task = {
-    userId: string;
-    content: string;
     id: number;
-    createdAt: string | null;
-    completed: boolean | null;
-    pause: boolean;
-}
+    content: string;
+    createdAt: Date;
+    userId: string;
+    completed: boolean;
+    elapsedTime: string;
+};

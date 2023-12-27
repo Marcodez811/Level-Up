@@ -3,3 +3,13 @@
     border-radius: 25px;
     padding: 1.5rem;
 }
+
+.item {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--mantine-spacing-sm);
+}
+
+.itemDragging {
+    box-shadow: var(--mantine-shadow-sm);
+}

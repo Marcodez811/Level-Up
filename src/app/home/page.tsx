@@ -1,40 +1,34 @@
 "use client";
-import motivationalQuotes from "@/lib/utils/motivationQuotes";
 import { Container,  Space } from "@mantine/core";
 import { useEffect, useState } from "react";
 import TaskSection from "../components/TaskSection";
 import { Task } from "@/lib/types/db";
+import axios from "axios";
 
 const Home = () => {
-    const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-    useEffect(() => {
-      const getTasks = async () => {
-        const res = await fetch(`/api/tasks/`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!res.ok) return;
-        
-        const data = await res.json();
-        
-        const tasks = Object.values(data.tasks) as Task[];
-        setTasks(tasks);
+  useEffect(() => {
+      const fetchData = async () => {
+          try {
+              const response = await axios.get("/api/tasks");
+              const data = response.data;
+              setTasks(data.tasks);
+          } catch (error) {
+              console.error("Error fetching tasks:", error);
+          }
       };
-      getTasks();
-    }, [tasks]);
+      fetchData();
+  }, []);
 
-    return (
+  return (
       <>
-        <Container fluid>
-          <Space h="md"/>
-          <div style={{borderBottom: "rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))"}}/>
-          <TaskSection tasks={tasks}/>
-        </Container>
+          <Container fluid>
+              <Space h="md" />
+              <TaskSection tasks={tasks} setTasks={setTasks}/>
+          </Container>
       </>
-    )
+  );
 }
 
 export default Home;

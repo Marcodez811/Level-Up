@@ -13,7 +13,7 @@ interface RankTableProps {
 
 export function RankTable({users} : RankTableProps) {
   const [scrolled, setScrolled] = useState(false);
-
+  
   const rows = users.map((user, idx) => {
     const total = levelExperience[user.level + 1];
     const pos = (user.experience / total) * 100;
@@ -28,10 +28,16 @@ export function RankTable({users} : RankTableProps) {
               alt="avatar"
               size="md"
               src={user.image}
-              color="indigo"
+              color="violet"
             />
-            {/* todo: wrap this in a Link Component and push the route to user/[userid] */}
-            <Anchor component="button" fz="sm" c="indigo" fw={700}>
+            {/* todo: push the route to user/[userid] */}
+            {/* todo: check if there's a way to change the theme so that anchor can display different color in different themes */}
+            <Anchor 
+              component="button" 
+              fz="sm" 
+              c="gray"
+              fw={700}
+            >
               {user.username}
             </Anchor>
           </Group>
