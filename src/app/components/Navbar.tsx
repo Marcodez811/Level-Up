@@ -4,6 +4,8 @@ import { useState, useCallback, forwardRef } from 'react';
 import { useRouter } from 'next/navigation'; 
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
+import { privateEnv } from "@/lib/env/private";
+
 
 import { Tooltip, UnstyledButton, Stack, useMantineColorScheme, useComputedColorScheme, ActionIcon } from '@mantine/core';
 import {
@@ -15,7 +17,7 @@ import {
 } from '@tabler/icons-react';
 import { Avatar } from '@mantine/core';
 import classes from './NavbarMinimal.module.css';
-import { CldUploadButton, CldUploadWidget, CldImage } from 'next-cloudinary';
+import { CldUploadButton, CldUploadButtonProps , CldUploadWidget, CldImage, getCldImageUrl } from 'next-cloudinary';
 
 import { User } from '@/lib/types/db';
 import cx from "clsx";
@@ -64,14 +66,37 @@ export function Navbar ({user}: NavbarProps) {
       }}
     />
   ));
-
+  const [imgUrl, setImgUrl] = useState(getCldImageUrl({
+    width: 960,
+    height: 600,
+    src: user.image?user.image:''
+  }));
   // handle user image upload
   const handleUpload = useCallback(
-    (result:any) => {
-        console.log("========");
-        console.log(result.info);
-        console.log(result.info.public_id)
-        setImgPublicId(result.info.public_id);
+    async(result:any) => {
+      const res = await fetch(`/api/user/${user.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          imgId: result.info.public_id
+        }),
+      });
+      if (!res.ok) {
+        return;
+      }
+      const updateUrl =async () => {
+        const url = getCldImageUrl({
+          width: 960,
+          height: 600,
+          src: result.info.public_id
+        });
+        setImgUrl(url);
+      }
+      updateUrl();
+      
+      router.refresh();
     },
     []
   )
@@ -80,7 +105,12 @@ export function Navbar ({user}: NavbarProps) {
     onUpload:(result: any) => void, 
     user: User
   }
-  const UploadButtonWithRef = forwardRef((props:propType) => {
+  const uploadProps = {
+    uploadPreset: "uploadPreset", // ? should it be a env variable?
+    onUpload: handleUpload, 
+    user: user
+  }
+  const UploadButtonWithRef = forwardRef((props:propType, ref) => {
     const {uploadPreset, onUpload, user} = props;
     return(
     <CldUploadButton uploadPreset={uploadPreset} onUpload={onUpload}>
@@ -88,7 +118,7 @@ export function Navbar ({user}: NavbarProps) {
         alt="avatar"
         radius="xl"
         size="md"
-        src={user.image}
+        src={imgUrl}
         color="indigo"
       />
     </CldUploadButton>
@@ -122,20 +152,8 @@ export function Navbar ({user}: NavbarProps) {
           label="Switch Theme" 
           onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
         />
-        {/* Warning: forwardRef render functions accept exactly two parameters: props and ref. Did you forget to use the ref parameter?  */}
+        
         {/* <Tooltip label={user.username} position="right" transitionProps={{ duration: 200 }}>
-            {user.image===null?(
-              <CldUploadButton uploadPreset="s5aw9acw" onUpload={handleUpload} >
-                <Avatar
-                alt="avatar"
-                radius="xl"
-                size="md"
-                src={user.image}
-                color="indigo"
-              />
-              </CldUploadButton>):<div></div>}
-        </Tooltip> */}
-        <Tooltip label={user.username} position="right" transitionProps={{ duration: 200 }}>
             <Avatar
                 alt="avatar"
                 radius="xl"
@@ -143,8 +161,10 @@ export function Navbar ({user}: NavbarProps) {
                 src={user.image}
                 color="indigo"
               />
+        </Tooltip> */}
+        <Tooltip label={user.username} position="right" transitionProps={{ duration: 200 }}>
+          <UploadButtonWithRef {...uploadProps}></UploadButtonWithRef>
         </Tooltip>
-
         
         <NavbarLink 
           icon={IconLogout} 

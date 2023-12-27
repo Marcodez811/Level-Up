@@ -2,17 +2,25 @@ import { Avatar, Text, Group } from '@mantine/core';
 import { IconAt, IconArrowBigUpLinesFilled } from '@tabler/icons-react';
 import classes from './UserInfoIcons.module.css';
 import { User } from '@/lib/types/db';
+import { getCldImageUrl } from 'next-cloudinary';
+
 
 interface UserInfoProps {
     user: User;
 }
 
 export function UserInfo({user} : UserInfoProps) {
+  const url = getCldImageUrl({
+    width: 960,
+    height: 600,
+    src: user.image?user.image:''
+  });
   return (
     <div>
       <Group wrap="nowrap">
         <Avatar
-          src={user.image}
+          // src={user.image}
+          src={url}
           size={94}
           radius="md"
         />

@@ -7,6 +7,8 @@ import { useState } from 'react';
 import cx from "clsx";
 import levelExperience from '@/lib/utils/levelExperience';
 
+import { CldUploadButton, CldUploadButtonProps , CldUploadWidget, CldImage, getCldImageUrl } from 'next-cloudinary';
+
 interface RankTableProps {
     users: User[];
 }
@@ -18,17 +20,28 @@ export function RankTable({users} : RankTableProps) {
     const total = levelExperience[user.level + 1];
     const pos = (user.experience / total) * 100;
     const neg = 100 - pos;
-
+    const url = getCldImageUrl({
+      width: 960,
+      height: 600,
+      src: user.image?user.image:''
+    });
     return (
       <Table.Tr key={user.id}>
         <Table.Td><Text size="sm" fw={700}>{idx + 1}</Text></Table.Td>
         <Table.Td>
           <Group gap="xs">
-            <Avatar
+            {/* <Avatar
               alt="avatar"
               size="md"
               src={user.image}
               color="violet"
+            /> */}
+            <Avatar
+              alt="avatar"
+              size="md"
+              // src={user.image}
+              src={url}
+              color="indigo"
             />
             {/* todo: push the route to user/[userid] */}
             {/* todo: check if there's a way to change the theme so that anchor can display different color in different themes */}
