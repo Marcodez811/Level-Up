@@ -50,15 +50,27 @@ export async function PUT(request: NextRequest, { params }: { params: IParams })
     if (!updatedTask) return new NextResponse(JSON.stringify("Invalid ID"), { status: 400 });
     if (!lastElapsedTime) return NextResponse.json({ updatedTask }, { status: 201 });
     const [taskOwner] = await db.select().from(usersTable).where(eq(usersTable.id, currentUser.id));
-    const convertToSec = (time:string) => {
+    const convertToSec = (time: string) => {
       const [hours, minutes, seconds] = time.split(':').map(Number);
       return hours * 3600 + minutes * 60 + seconds;
     }
     const elapsedSec = convertToSec(elapsedTime) - convertToSec(lastElapsedTime);
+    const totalElapsedTime = convertToSec(taskOwner.totalElapsedTime) + Math.floor(elapsedSec);
+    const convertToInterval = (seconds: number) => {
+        const hour = Math.floor(seconds / 3600);
+        seconds -= hour * 3600;
+        const minute = Math.floor(seconds / 60);
+        seconds -= minute * 60;
+        const second = seconds;
+        return `${hour}:${minute}:${second}`;
+    }
     await db.transaction(async (tx) => {
       let [user] = await tx
         .update(usersTable)
-        .set({ experience: taskOwner.experience! + Math.floor(elapsedSec) })
+        .set({ 
+          experience: taskOwner.experience + Math.floor(elapsedSec),
+          totalElapsedTime: convertToInterval(totalElapsedTime),
+        })
         .where(eq(usersTable.id,taskOwner.id))
         .returning(
           { 
@@ -76,7 +88,7 @@ export async function PUT(request: NextRequest, { params }: { params: IParams })
                          .where(eq(usersTable.id, taskOwner.id))
                          .returning();
       };
-    })
+    });
     return NextResponse.json({ experience: elapsedSec }, { status: 201 });
   } catch (err) {
       console.error(err);

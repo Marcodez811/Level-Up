@@ -1,11 +1,13 @@
 export type User = {
     id: string;
-    email: string;
     username: string;
-    experience: number;
-    level: number;
-    image: string | null;
+    email: string;
     provider: "github" | "google" | "credentials";
+    image: string | null;
+    level: number;
+    experience: number;
+    totalElapsedTime: string;
+    hashedPassword: string | null;
 };
 
 export type Task = {

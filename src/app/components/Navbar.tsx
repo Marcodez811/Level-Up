@@ -81,13 +81,6 @@ export function Navbar ({user}: NavbarProps) {
               <IconMoonFilled className={cx(classes.icon, classes.dark)} stroke={1.5} />
           </ActionIcon>
         </Tooltip>
-        {/* <NavbarLink 
-          icon={computedColorScheme === 'light'? 
-                                          IconMoonFilled:
-                                          IconSunFilled} 
-          label="Switch Theme" 
-          onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
-        /> */}
         <Tooltip label={user.username} position="right" transitionProps={{ duration: 200 }}>
             <Avatar
                 alt="avatar"

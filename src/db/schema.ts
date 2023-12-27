@@ -27,6 +27,7 @@ export const usersTable = pgTable(
     image: varchar("image", { length: 100 }),
     level: integer('level').default(1).notNull(),
     experience: integer('experience').default(0).notNull(),
+    totalElapsedTime: interval("total_elapsed_time").notNull().default(sql`'0 seconds'::interval`),
     hashedPassword: varchar("hashed_password", { length: 100 }),
   },
   (table) => ({

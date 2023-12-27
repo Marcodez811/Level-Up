@@ -79,7 +79,12 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ elapsedTime: timer, completed: !value, lastElapsedTime: task.elapsedTime }),
+        body: JSON.stringify(
+          {
+            elapsedTime: timer,
+            completed: !value,
+            lastElapsedTime: task.elapsedTime 
+          }),
       });
   
       if (!response.ok) {
