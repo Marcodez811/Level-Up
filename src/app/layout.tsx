@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import { SessionProvider } from "next-auth/react";
 import { MantineProvider, ColorSchemeScript, createTheme } from "@mantine/core";
-import ToasterContext from './context/ToasterContext';
+import { Notifications } from '@mantine/notifications';
+
 const inter = Inter({ subsets: ['latin'] })
 const theme = createTheme({
   fontFamily: "inherit" 
@@ -29,8 +31,10 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <SessionProvider>
-          <ToasterContext/>
-          <MantineProvider theme={theme}>{children}</MantineProvider>
+          <MantineProvider theme={theme}>
+            <Notifications/>
+            {children}
+          </MantineProvider>
         </SessionProvider>
       </body>
     </html>

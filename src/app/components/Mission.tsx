@@ -4,13 +4,13 @@ import { IconPlayerPlayFilled, IconPlayerPauseFilled, IconTrash } from '@tabler/
 import axios from 'axios';
 import { Task } from '@/lib/types/db';
 import classes from './CheckboxCard.module.css';
+import { notifications } from '@mantine/notifications';
 
 export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<SetStateAction<Task[]>> }) {
   const [value, onChange] = useState(task.completed);
   const [timer, setTimer] = useState(task.elapsedTime);
   const [ticking, setTicking] = useState(false);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | undefined>(undefined);
-
   const onDelete = async () => {
     setTicking(false);
     await axios.delete(`/api/tasks/${task.id}`);
@@ -19,7 +19,6 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
 
   const updateTimer = () => {
     setTimer((prevTimer) => {
-      // Parse the previous timer value
       const [hours, minutes, seconds] = prevTimer.split(':').map(Number);
       // Increment the seconds
       let newSeconds = seconds + 1;
@@ -52,19 +51,13 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ elapsedTime: timer }),
+          body: JSON.stringify({ elapsedTime: timer, completed: !value, lastElapsedTime: "" }),
         });
-      
-        if (!response.ok) {
-          throw new Error(`Error updating timer value: ${response.status} ${response.statusText}`);
-        }
-      
         const responseData = await response.json();
         console.log("Timer value updated successfully:", responseData);
       } catch (error) {
         console.error("Error updating timer value:", error);
       }
-      
     };
   
     if (ticking) {
@@ -73,24 +66,47 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
       setIntervalId(newIntervalId);
       return () => clearInterval(newIntervalId);
     } else {
-      // send put request to backend
-      console.log("Stopped timer, sending PUT request...");
+      if (value) return; 
       updateTimerValue();
     }
-  }, [ticking, task.id, timer]);
+  }, [ticking, task.id, timer, value]);
 
   const onComplete = async () => {
-    // Your logic for completing the task
+    let responseData;
+    try {
+      const response = await fetch(`/api/tasks/${task.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ elapsedTime: timer, completed: !value, lastElapsedTime: task.elapsedTime }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error updating timer value: ${response.status} ${response.statusText}`);
+      }
+      responseData = await response.json();
+      onChange(!value);
+    } catch (error) {
+      console.error("Error updating timer value:", error);
+    }
+    if (!value) {
+      notifications.show({
+          title: "Success",
+          message: `You just gained ${responseData.experience} experience by focusing!`,
+          color: "green"
+      });
+    }
   };
+  
 
   return (
-    <Paper className={classes.button}>
+    <Paper className={classes.button} w="95%" >
       <Flex justify="space-between" w="100%">
         <Group gap={0}>
           <Checkbox
-            disabled={task.completed}
             checked={value}
-            onChange={() => onChange(!value)}
+            onChange={onComplete}
             tabIndex={-1}
             size="md"
             mr="xl"
@@ -99,7 +115,7 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
             color="violet"
           />
           <div>
-            <Text size="sm" fw={700}>
+            <Text size="sm" fw={700} td={value? "line-through": ""}>
               {task.content}
             </Text>
           </div>
@@ -108,7 +124,7 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
           <Text>{timer}</Text>
           <ActionIcon
             variant="transparent"
-            disabled={task.completed}
+            disabled={value}
             color="violet"
             size="sm"
             onClick={() => {

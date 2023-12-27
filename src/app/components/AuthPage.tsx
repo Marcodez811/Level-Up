@@ -3,7 +3,7 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
-import toast from "react-hot-toast";
+import { notifications } from '@mantine/notifications';
 import { useRouter } from "next/navigation";
 import { Button, TextInput, Stack, Center, Title, Space, Text, Group } from "@mantine/core";
 import { GoogleButton } from "./GoogleButton";
@@ -45,7 +45,11 @@ export default function AuthPage() {
         if (variant === 'register') {
             axios.post("/api/register", data)
                  .then(() => signIn('credentials', data))
-                 .catch(() => toast.error("Someone has registered with this email or username"))
+                 .catch(() => notifications.show({
+                    title: "Error",
+                    message: "Someone has registered with this email or username",
+                    color: "red"
+                 }))
                  .finally(() => setIsLoading(false));
         } else {
             signIn("credentials", {
@@ -54,7 +58,11 @@ export default function AuthPage() {
             })
             .then((callback) => {
                 if (callback?.error) {
-                    toast.error("Invalid Credentials");
+                    notifications.show({
+                        title: "Error",
+                        message: "Invalid Credentials!",
+                        color: "red"
+                    });
                 } else {
                     if (callback?.ok) {
                         router.push("/chats");
@@ -70,7 +78,11 @@ export default function AuthPage() {
         signIn(action, { redirect: false })
         .then((callback) => {
             if (callback?.error) {
-                toast.error("Invalid Credentials");
+                notifications.show({
+                    title: "Error",
+                    message: "Invalid Credentials!",
+                    color: "red"
+                });
             } else {
                 if (callback?.ok) {
                     router.push("/home");

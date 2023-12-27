@@ -8,6 +8,7 @@ import {
   IconLogout,
   IconMoonFilled,
   IconSunFilled,
+  IconUser
 } from '@tabler/icons-react';
 import { Avatar } from '@mantine/core';
 import classes from './NavbarMinimal.module.css';
@@ -36,7 +37,7 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 
 const data = [
   { icon: IconHome2, label: 'Home' },
-  { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
+  { icon: IconUser, label: 'Account' },
 ];
 
 interface NavbarProps {

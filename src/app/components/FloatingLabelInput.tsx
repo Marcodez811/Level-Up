@@ -1,12 +1,11 @@
 "use client";
 
 import { Dispatch, SetStateAction, useState } from 'react';
-import axios from 'axios';
 import { TextInput } from '@mantine/core';
 import classes from './FloatingLabelInput.module.css';
 import { useEventListener } from '@mantine/hooks';
 import { useSession } from 'next-auth/react';
-import toast from 'react-hot-toast';
+import { notifications } from '@mantine/notifications';
 import { Task } from '@/lib/types/db';
 
 export function FloatingLabelInput({setTasks}: {setTasks: Dispatch<SetStateAction<Task[]>>}) {
@@ -38,7 +37,11 @@ export function FloatingLabelInput({setTasks}: {setTasks: Dispatch<SetStateActio
           setTasks(tasks => [newTask, ...tasks]);
           setValue("");
         } catch (error: any) {
-            toast.error(error.message);
+          notifications.show({
+              title: "Error",
+              message: "Something went wrong while setting up this todo!",
+              color: "red"
+          });
         }
       } 
   });

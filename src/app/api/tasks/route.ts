@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
     const tasks = await db.select()
                           .from(tasksTable)
                           .where(eq(tasksTable.userId, currentUser.id))
-                          .orderBy(desc(tasksTable.createdAt));
+                          .orderBy((desc(tasksTable.elapsedTime), tasksTable.completed));
     return NextResponse.json({ tasks }, { status: 200 })
   } catch (error) {
     console.error(error)

@@ -5,4 +5,4 @@
     border-radius: var(--mantine-radius-lg);
     padding: var(--mantine-spacing-lg);
     background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
-  }
+}
