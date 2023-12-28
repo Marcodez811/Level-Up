@@ -3,7 +3,8 @@ import { db } from "@/db";
 import { tasksTable, usersTable } from "@/db/schema";
 import levelExperience from "@/lib/utils/levelExperience";
 import { eq } from "drizzle-orm";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { z } from "zod";
 
 interface IParams {

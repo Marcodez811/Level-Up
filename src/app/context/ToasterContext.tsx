@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
-const ToasterContext = () => {
+function ToasterContext() {
     return (
         <Toaster 
             toastOptions={{

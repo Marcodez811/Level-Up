@@ -1,8 +1,10 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
+
 import { Checkbox, Text, Paper, Flex, Group, ActionIcon } from '@mantine/core';
 import { IconPlayerPlayFilled, IconPlayerPauseFilled, IconTrash } from '@tabler/icons-react';
 import axios from 'axios';
-import { Task } from '@/lib/types/db';
+import type { Task } from '@/lib/types/db';
 import classes from './CheckboxCard.module.css';
 import { notifications } from '@mantine/notifications';
 
@@ -10,6 +12,7 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
   const [value, onChange] = useState(task.completed);
   const [timer, setTimer] = useState(task.elapsedTime);
   const [ticking, setTicking] = useState(false);
+  /* eslint-disable */
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | undefined>(undefined);
   const onDelete = async () => {
     setTicking(false);

@@ -1,6 +1,6 @@
 import { Text, Card, RingProgress, Group } from '@mantine/core';
 import classes from './MissionProgress.module.css';
-import { UserInfo } from '@/lib/types/db';
+import type { UserInfo } from '@/lib/types/db';
 import levelExperience from '@/lib/utils/levelExperience';
 
 

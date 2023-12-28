@@ -11,7 +11,7 @@ import {
 } from '@tabler/icons-react';
 import { Avatar } from '@mantine/core';
 import classes from './NavbarMinimal.module.css';
-import { User } from '@/lib/types/db';
+import type { User } from '@/lib/types/db';
 import { useRouter } from 'next/navigation'; 
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';

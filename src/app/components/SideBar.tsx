@@ -1,4 +1,4 @@
-import { User } from "@/lib/types/db";
+import type { User } from "@/lib/types/db";
 import getCurrentUser from "../actions/getCurrentUser";
 import { Navbar } from "./Navbar";
 import { redirect } from 'next/navigation';

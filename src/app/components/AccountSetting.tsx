@@ -1,6 +1,6 @@
 "use client";
 
-import { User } from "@/lib/types/db"
+import type { User } from "@/lib/types/db"
 import { Stack, Title, Avatar, Text, PasswordInput, Button, Group, Space, TextInput } from "@mantine/core"
 import classes from "./AccountSetting.module.css"
 import { CldUploadWidget } from 'next-cloudinary';
@@ -10,7 +10,7 @@ import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 
-const AccountSetting = ({user} : {user: User}) => {
+function AccountSetting({user} : {user: User}) {
     const [imgUrl, setImgUrl] = useState(user.image);
     const [disabled, setDisabled] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -30,12 +30,12 @@ const AccountSetting = ({user} : {user: User}) => {
         },
     });
 
-    const handleUpload = (result: any) => {
+    const handleUpload = (result:any) => {
         setImgUrl(result.info.secure_url);
         form.setFieldValue('image', result.info.secure_url);
         setDisabled(true);
     }
-    const handleSubmit = (values: any) => {
+    const handleSubmit = (values:any) => {
         setIsLoading(true);
         if (Object.keys(values).every(key => values[key] === '')) {
             notifications.show({

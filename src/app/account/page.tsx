@@ -1,10 +1,10 @@
 "use client";
 import { Container,  Space } from "@mantine/core";
 import { useSession } from "next-auth/react";
-import { User } from "@/lib/types/db";
+import type { User } from "@/lib/types/db";
 import AccountSetting from "../components/AccountSetting";
 
-const Home = () => {
+function Home() {
     const session = useSession();
     if (!session.data) return;
     if (!session.data.user) return;

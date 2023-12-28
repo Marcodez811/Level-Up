@@ -1,12 +1,13 @@
 "use client";
 
-import { Dispatch, SetStateAction, useState } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
+import { useState } from 'react';
 import { TextInput } from '@mantine/core';
 import classes from './FloatingLabelInput.module.css';
 import { useEventListener } from '@mantine/hooks';
 import { useSession } from 'next-auth/react';
 import { notifications } from '@mantine/notifications';
-import { Task } from '@/lib/types/db';
+import type { Task } from '@/lib/types/db';
 
 export function FloatingLabelInput({setTasks}: {setTasks: Dispatch<SetStateAction<Task[]>>}) {
   const [focused, setFocused] = useState(false);
@@ -36,7 +37,7 @@ export function FloatingLabelInput({setTasks}: {setTasks: Dispatch<SetStateActio
           const newTask = data.task;
           setTasks(tasks => [newTask, ...tasks]);
           setValue("");
-        } catch (error: any) {
+        } catch (error) {
           notifications.show({
               title: "Error",
               message: "Something went wrong while setting up this todo!",

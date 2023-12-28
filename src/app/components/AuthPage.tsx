@@ -38,7 +38,7 @@ export default function AuthPage() {
           currentUrl.searchParams.delete('error');    
           window.history.replaceState({}, document.title, currentUrl.toString());
         }
-      }, [variant]);
+      }, [form, variant]);
     useEffect(() => {
         if (session?.status === 'authenticated') {
             router.push('/home');
@@ -48,7 +48,7 @@ export default function AuthPage() {
     const switchVariant = useCallback(() => {
         form.clearErrors();
         setVariant(variant === "login" ? "register" : "login");
-    }, [variant]);
+    }, [variant, form]);
 
     const onSubmit = (data: {username: string; password: string; email: string;}) => {
         setIsLoading(true);

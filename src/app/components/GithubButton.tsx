@@ -1,4 +1,5 @@
-import { Button, ButtonProps } from '@mantine/core';
+import type { ButtonProps } from '@mantine/core';
+import { Button } from '@mantine/core';
 import { BsGithub } from "react-icons/bs";
 
 export function GithubButton(props: ButtonProps & React.ComponentPropsWithoutRef<'button'>) {

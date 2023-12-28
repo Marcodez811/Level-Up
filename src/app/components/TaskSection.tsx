@@ -4,12 +4,12 @@ import { ScrollArea, Stack, Title } from "@mantine/core";
 import classes from "./TaskSection.module.css";
 import cx from 'clsx';
 import { FloatingLabelInput } from "./FloatingLabelInput";
-import { Task } from "@/lib/types/db";
+import type { Task } from "@/lib/types/db";
 import { Mission } from "./Mission";
-import { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
-const TaskSection = ({tasks, setTasks}: {tasks: Task[], setTasks: Dispatch<SetStateAction<Task[]>>}) => {
+function TaskSection({tasks, setTasks}: {tasks: Task[], setTasks: Dispatch<SetStateAction<Task[]>>}) {
   const items = tasks.map((t, idx) => (
     <Draggable key={t.id} index={idx} draggableId={t.id.toString()}>
       {(provided, snapshot) => (

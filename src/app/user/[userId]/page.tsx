@@ -5,7 +5,7 @@ import axios from "axios";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const Home = () => {
+function Home() {
     const pathname = usePathname();
     const userId = pathname.split("/").pop();
     const [user, setUser] = useState(null);

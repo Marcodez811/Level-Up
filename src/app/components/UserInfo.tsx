@@ -1,7 +1,7 @@
 import { Avatar, Text, Group, Stack, Title, Space } from '@mantine/core';
 import { IconAt, IconArrowBigUpLinesFilled } from '@tabler/icons-react';
 import classes from './UserInfoIcons.module.css';
-import { UserInfo } from '@/lib/types/db';
+import type { UserInfo } from '@/lib/types/db';
 import { MissionProgress } from './MissionProgress';
 
 interface UserInfoProps {

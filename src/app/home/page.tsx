@@ -2,10 +2,10 @@
 import { Container,  Space } from "@mantine/core";
 import { useEffect, useState } from "react";
 import TaskSection from "../components/TaskSection";
-import { Task } from "@/lib/types/db";
+import type { Task } from "@/lib/types/db";
 import axios from "axios";
 
-const Home = () => {
+function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {

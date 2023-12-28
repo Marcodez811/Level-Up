@@ -2,7 +2,7 @@
 
 import { Table, Progress, Anchor, Text, Group, ScrollArea, Avatar } from '@mantine/core';
 import classes from "./RankTable.module.css";
-import { User } from '@/lib/types/db';
+import type { User } from '@/lib/types/db';
 import { useState } from 'react';
 import cx from "clsx";
 import levelExperience from '@/lib/utils/levelExperience';
