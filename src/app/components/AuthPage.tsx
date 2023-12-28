@@ -27,6 +27,7 @@ export default function AuthPage() {
     
         validate: {
           email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+          password: (value) => (value.length >= 8 ? null : 'Password should include at least 8 characters'),
         },
     });
 
@@ -65,7 +66,7 @@ export default function AuthPage() {
                     });
                 } else {
                     if (callback?.ok) {
-                        router.push("/chats");
+                        router.push("/home");
                     }
                 }
             })
@@ -110,6 +111,7 @@ export default function AuthPage() {
                         <TextInput 
                             label="Username"
                             disabled={isLoading}
+                            required
                             {...form.getInputProps('username')} 
                         />
                     }
