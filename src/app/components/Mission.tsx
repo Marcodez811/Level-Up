@@ -51,7 +51,7 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ elapsedTime: timer, completed: !value, lastElapsedTime: "" }),
+          body: JSON.stringify({ elapsedTime: timer, completed: value, lastElapsedTime: "" }),
         });
         const responseData = await response.json();
         console.log("Timer value updated successfully:", responseData);
