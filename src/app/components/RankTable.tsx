@@ -30,11 +30,9 @@ export function RankTable({users} : RankTableProps) {
               src={user.image}
               color="violet"
             />
-            {/* todo: check if there's a way to change the theme so that anchor can display different color in different themes */}
             <Anchor 
-              // component="button" 
               fz="sm" 
-              c="gray"
+              className={classes.anchor}
               fw={700}
               href={`/user/${user.id}`}
             >

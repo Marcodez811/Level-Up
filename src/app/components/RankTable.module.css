@@ -18,3 +18,7 @@
 .scrolled {
   box-shadow: var(--mantine-shadow-sm);
 }
+
+.anchor {
+  color: light-dark(var(--mantine-color-dark-7), var(--mantine-color-light-3));
+}
