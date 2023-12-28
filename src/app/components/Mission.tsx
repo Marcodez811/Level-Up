@@ -73,6 +73,7 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
 
   const onComplete = async () => {
     let responseData;
+    setTicking(false);
     try {
       const response = await fetch(`/api/tasks/${task.id}`, {
         method: 'PUT',
