@@ -31,7 +31,6 @@ export default function AuthPage() {
         },
     });
     useEffect(() => {
-        
         const currentUrl = new URL(window.location.href);
         if (currentUrl.searchParams.get('error') === 'CredentialsSignin' && variant !== 'register') {
             form.setErrors({ email: 'Invalid email or password..', password: 'Invalid email or password.' });
