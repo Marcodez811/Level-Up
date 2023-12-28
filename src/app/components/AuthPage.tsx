@@ -30,7 +30,13 @@ export default function AuthPage() {
           password: (value) => (value.length >= 8 ? null : 'Password should include at least 8 characters'),
         },
     });
-
+    useEffect(() => {
+        const currentUrl = new URL(window.location.href);
+        if (currentUrl.searchParams.get('error') === 'CredentialsSignin') {
+          currentUrl.searchParams.delete('error');    
+          window.history.replaceState({}, document.title, currentUrl.toString());
+        }
+      }, []);
     useEffect(() => {
         if (session?.status === 'authenticated') {
             router.push('/home');
