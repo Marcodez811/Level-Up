@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Level Up
+Join us and take your productivity to the next level!
 
-## Getting Started
+ ## Features
+ - ### Login
+   - Except login with account on our websit, you can also login with your Github account or Google account. 
+ - ### Create tasks
+   - To create a new task, simply enter the task name in the input box and press `Enter`.
+ - ### Complete tasks
+   - When you complete a task, click the `checkbox`, and the experience will be calculated.
+ - ### Pause tasks
+   - If you want to take a break, you can click the `pause` button to pause a task.
+   - Please aware that you have to pause or complete the task before you leave the page, otherwise, the time won't be counted.
+ - ### Delete tasks
+   - To delete a task, click the `trash icon` button.
+ - ### Competing with other users
+   - A rank table will be shown on the right side.
 
-First, run the development server:
+ ## Setup
+  - ### Env setup
+    ```zsh
+        # in .env.local
+        POSTGRES_URL="postgres://postgres:postgres@localhost:5432/level-up"
+        NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+        AUTH_SECRET="<Random string>"
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+        NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="<Cloudinary Name>"
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+        AUTH_GITHUB_ID="<Github Oauth Id>"
+        AUTH_GITHUB_SECRET="<Github Oauth secret>"
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+        AUTH_GOOGLE_ID="<Google Oauth Id>"
+        AUTH_GOOGLE_SECRET="<Google Oauth secret>"
+    ```
+  - ### Run the server
+    ```zsh
+        # install dependencies
+        yarn
+        # run database
+        docker compose up -d
+        yarn migrate
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+        # run server
+        yarn dev
+    ```
