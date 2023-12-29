@@ -30,12 +30,12 @@ Create a .env.local file with the following content:
     ```zsh
         # database string (docker)
         POSTGRES_URL=<database string>
-		# base url of the app
+	# base url of the app
         NEXT_PUBLIC_BASE_URL=http://localhost:3000
-		# next-cloudinary cloud name (just use ours' for testing purpose)
+	# next-cloudinary cloud name (just use ours' for testing purpose)
         NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=<...>
-		# auth related
-		AUTH_SECRET=<Random string>
+	# auth related
+	AUTH_SECRET=<Random string>
         AUTH_GITHUB_ID=<Github Oauth Id>
         AUTH_GITHUB_SECRET=<Github Oauth secret>
         AUTH_GOOGLE_ID=<Google Oauth Id>
