@@ -27,30 +27,30 @@ Level Up is a productivity app that allows you to "level up" based on the time y
 ### Setting up our app on localhost:
 Create a .env.local file with the following content:
   - ### .env.local setup in the root directory
-    ```zsh
-        # database string (docker)
-        POSTGRES_URL=<database string>
-	# base url of the app
-        NEXT_PUBLIC_BASE_URL=http://localhost:3000
-	# next-cloudinary cloud name (just use ours' for testing purpose)
-        NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=<...>
-	# auth related
-	AUTH_SECRET=<Random string>
-        AUTH_GITHUB_ID=<Github Oauth Id>
-        AUTH_GITHUB_SECRET=<Github Oauth secret>
-        AUTH_GOOGLE_ID=<Google Oauth Id>
-        AUTH_GOOGLE_SECRET=<Google Oauth secret>
-    ```
+```zsh
+# database string (docker)
+POSTGRES_URL=<database string>
+# base url of the app
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+# next-cloudinary cloud name (just use ours' for testing purpose)
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=<...>
+# auth related
+AUTH_SECRET=<Random string>
+AUTH_GITHUB_ID=<Github Oauth Id>
+AUTH_GITHUB_SECRET=<Github Oauth secret>
+AUTH_GOOGLE_ID=<Google Oauth Id>
+AUTH_GOOGLE_SECRET=<Google Oauth secret>
+```
   - ### Running the app
-    ```zsh
-        # install dependencies
-        yarn
-        # setup database
-        docker compose up -d
-        yarn migrate
-        # run server
-        yarn 
-    ```
+```zsh
+# install dependencies
+yarn
+# setup database
+docker compose up -d
+yarn migrate
+# run server
+yarn 
+```
 
 ### Third-Party Packages utilized:
 - #### Auth Related:
