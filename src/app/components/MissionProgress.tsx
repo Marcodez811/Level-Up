@@ -34,7 +34,7 @@ export function MissionProgress({user}: {user: UserInfo}) {
               {user.totalElapsedTime}
             </Text>
             <Text fz="xs" c="dimmed">
-              total seconds
+              total time
             </Text>
           </div>
           <Group mt="lg">{items}</Group>

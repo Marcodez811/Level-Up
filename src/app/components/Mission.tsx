@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
-
+import { useRouter } from 'next/navigation';
 import { Checkbox, Text, Paper, Flex, Group, ActionIcon } from '@mantine/core';
 import { IconPlayerPlayFilled, IconPlayerPauseFilled, IconTrash } from '@tabler/icons-react';
 import axios from 'axios';
@@ -14,6 +14,7 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
   const [ticking, setTicking] = useState(false);
   /* eslint-disable */
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | undefined>(undefined);
+  const router = useRouter();
   const onDelete = async () => {
     setTicking(false);
     await axios.delete(`/api/tasks/${task.id}`);
@@ -54,7 +55,7 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ elapsedTime: timer, completed: value, lastElapsedTime: "" }),
+          body: JSON.stringify({ elapsedTime: timer, completed: value}),
         });
         const responseData = await response.json();
         console.log("Timer value updated successfully:", responseData);
@@ -69,7 +70,6 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
       setIntervalId(newIntervalId);
       return () => clearInterval(newIntervalId);
     } else {
-      if (value) return; 
       updateTimerValue();
     }
   }, [ticking, task.id, timer, value]);
@@ -87,15 +87,17 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
           {
             elapsedTime: timer,
             completed: !value,
-            lastElapsedTime: task.elapsedTime 
+            // lastElapsedTime: task.elapsedTime 
           }),
       });
-  
       if (!response.ok) {
         throw new Error(`Error updating timer value: ${response.status} ${response.statusText}`);
       }
+
       responseData = await response.json();
       onChange(!value);
+      router.refresh();
+
     } catch (error) {
       console.error("Error updating timer value:", error);
     }
@@ -115,6 +117,7 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
         <Group gap={0}>
           <Checkbox
             checked={value}
+            disabled={value}
             onChange={onComplete}
             tabIndex={-1}
             size="md"

@@ -14,7 +14,7 @@ interface IParams {
 const updateTaskSchema = z.object({
   elapsedTime: z.string(),
   completed: z.boolean(),
-  lastElapsedTime: z.string().optional(),
+  // lastElapsedTime: z.string().optional(),
 })
 
 type UpdateTaskRequest = z.infer<typeof updateTaskSchema>;
@@ -41,7 +41,7 @@ export async function PUT(request: NextRequest, { params }: { params: IParams })
   }
   try {
     const { taskId } = params;
-    const { elapsedTime, completed, lastElapsedTime } = data as UpdateTaskRequest;
+    const { elapsedTime, completed } = data as UpdateTaskRequest;
     const currentUser = await getCurrentUser();
     if (!currentUser) return new NextResponse(JSON.stringify("Unauthorized"), { status: 401 });
     const [updatedTask] = await db.update(tasksTable)
@@ -49,13 +49,13 @@ export async function PUT(request: NextRequest, { params }: { params: IParams })
                                   .where(eq(tasksTable.id, Number(taskId)))
                                   .returning();
     if (!updatedTask) return new NextResponse(JSON.stringify("Invalid ID"), { status: 400 });
-    if (!lastElapsedTime) return NextResponse.json({ updatedTask }, { status: 201 });
+    // if (!lastElapsedTime) return NextResponse.json({ updatedTask }, { status: 201 });
     const [taskOwner] = await db.select().from(usersTable).where(eq(usersTable.id, currentUser.id));
     const convertToSec = (time: string) => {
       const [hours, minutes, seconds] = time.split(':').map(Number);
       return hours * 3600 + minutes * 60 + seconds;
     }
-    const elapsedSec = convertToSec(elapsedTime) - convertToSec(lastElapsedTime);
+    const elapsedSec = convertToSec(elapsedTime);
     const totalElapsedTime = convertToSec(taskOwner.totalElapsedTime) + Math.floor(elapsedSec);
     const convertToInterval = (seconds: number) => {
         const hour = Math.floor(seconds / 3600);
