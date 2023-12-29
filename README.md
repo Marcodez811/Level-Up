@@ -81,5 +81,5 @@ yarn
     > 這次專案可以提供使用者紀錄自己在各種任務上專注的時間，隨著專注時間增加也能提升等級。希望未來可以讓等級除了與其他人競爭外有更多的用途，以刺激使用者努力提升等級。另外，原本希望可以透過email提醒、鼓勵使用者繼續執行一些暫停時間過長的任務，但因為需要用到DNS的相關設定，我對於這部分內容不夠熟悉而無法實現，未來有機會希望可以有更充足的知識做出這項功能。
 ### Responsibilities of Each Team Member:
 - #### B11106011 歐益劭:
-     - Frontend
+     - Design and implementation of the frontend, handling authentication, page routing, and creating leveling system, ranking system. 
 - #### B11106031 施宥丞:
