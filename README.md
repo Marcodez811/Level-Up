@@ -83,3 +83,4 @@ yarn
 - #### B11106011 歐益劭:
      - Design and implementation of the frontend, handling authentication, page routing, and creating leveling system, ranking system. 
 - #### B11106031 施宥丞:
+     - Managing backend requests, API routes, database connections, image uploads, bug fixes, and deployment.
