@@ -57,8 +57,8 @@ export function Mission({ task, setTasks }: { task: Task; setTasks: Dispatch<Set
           },
           body: JSON.stringify({ elapsedTime: timer, completed: value}),
         });
-        const responseData = await response.json();
-        console.log("Timer value updated successfully:", responseData);
+        // const responseData = await response.json();
+        // console.log("Timer value updated successfully:", responseData);
       } catch (error) {
         console.error("Error updating timer value:", error);
       }
